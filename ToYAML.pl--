@@ -1,4 +1,0 @@
-web:
-	admin:
-		initial_superusers:
-			- your.email@example.com

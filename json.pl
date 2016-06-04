@@ -1,0 +1,27 @@
+use Mojo::JSON qw/encode_json decode_json true false/;
+use strict;
+use warnings;
+use Data::Dumper;
+
+my $bool = true;
+my $bool2 = false;
+my $data = { bool_attr0 => \1, bool_attr1 => $bool2 , bool_attr2 => true, boolattr3 => false};
+my $zero_json = q/{ "foo": "0", "bar" : "" }/;
+print encode_json $data;
+print "\n";
+print true . "\n";
+print 'is true' . "\n" if true;
+print 'is false' . "\n" if not false;
+my $zero_perl = decode_json $zero_json;
+my $val = $zero_perl->{foo};
+print 'decode json' . Dumper($zero_perl) . "\n"; 
+print ref $val;
+print "\n";
+print "foo is numerical 0\n" if $val == 0;
+print 'blank string' if defined $val and not $val and $val != 0;
+print 'really is blank' if $zero_perl->{bar} eq q//;
+print "\n";
+my $valid = 1;
+$valid &&= ($zero_perl->{bar} or $zero_perl->{bar} == 0);
+print "valid\n" if $valid;
+print "zero is blank" if 0 == '';

@@ -1,0 +1,45 @@
+#/usr/bin/perl
+use strict;
+use warnings;
+use lib './';
+use Parser::SOAP;
+use Parser::PullParser;
+use Parser::PrintParser;
+use Parser::P2;
+use XML::LibXML;
+use XML::LibXML::SAX;
+use XML::LibXML::SAX::Parser;
+use Data::Dumper;
+use XML::Simple;
+use XML::SAX::ParserFactory;
+use XML::SAX::Writer;
+use Mojo::MyDom;
+use Mojo::DOM;
+use Mojo::JSON qw/encode_json/;
+my $libxml = XML::LibXML->new( Handler => XML::LibXML::SAX->new() );
+my $parser = $libxml->parse_string( '<poop>3456</poop>');
+print Dumper $parser;
+
+my $data_source_res = q{<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><ns:getUserResponse xmlns:ns="http://user.ws.blackboard" xmlns:ax215="http://ws.platform.blackboard/xsd" xmlns:ax216="http://user.ws.blackboard/xsd"><ns:return type="blackboard.ws.user.UserVO"><ax216:birthDate>0</ax216:birthDate><ax216:dataSourceId>_6_1</ax216:dataSourceId><ax216:educationLevel>blackboard.data.user.User$EducationLevel:UNKNOWN</ax216:educationLevel><ax216:expansionData>USER.UUID=3369850da7b44147a2e5e1549b5bb123</ax216:expansionData><ax216:extendedInfo type="blackboard.ws.user.UserExtendedInfoVO"><ax216:businessFax></ax216:businessFax><ax216:businessPhone1></ax216:businessPhone1><ax216:businessPhone2></ax216:businessPhone2><ax216:city></ax216:city><ax216:company></ax216:company><ax216:country></ax216:country><ax216:department></ax216:department><ax216:emailAddress>wfwheele@buffalo.edu</ax216:emailAddress><ax216:expansionData>USER.OTHERNAME=</ax216:expansionData><ax216:expansionData>USER.SUFFIX=</ax216:expansionData><ax216:familyName>Wheeler</ax216:familyName><ax216:givenName>William</ax216:givenName><ax216:homeFax xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" /><ax216:homePhone1></ax216:homePhone1><ax216:homePhone2></ax216:homePhone2><ax216:jobTitle></ax216:jobTitle><ax216:middleName>Frank</ax216:middleName><ax216:mobilePhone></ax216:mobilePhone><ax216:state></ax216:state><ax216:street1></ax216:street1><ax216:street2></ax216:street2><ax216:webPage></ax216:webPage><ax216:zipCode></ax216:zipCode></ax216:extendedInfo><ax216:genderType>blackboard.data.user.User$Gender:UNKNOWN</ax216:genderType><ax216:id>_234034_1</ax216:id><ax216:insRoles>STAFF</ax216:insRoles><ax216:isAvailable>true</ax216:isAvailable><ax216:name>wfwheele</ax216:name><ax216:password>F43D3D292665A1AACB7A441AE614B253</ax216:password><ax216:studentId>36347353</ax216:studentId><ax216:systemRoles>SYSTEM_ADMIN</ax216:systemRoles><ax216:systemRoles>SYSTEM_ADMIN</ax216:systemRoles><ax216:title></ax216:title><ax216:userBatchUid>wfwheele</ax216:userBatchUid></ns:return><ns:return type="blackboard.ws.user.UserVO"><ax216:birthDate>0</ax216:birthDate><ax216:dataSourceId>_6_1</ax216:dataSourceId><ax216:educationLevel>blackboard.data.user.User$EducationLevel:UNKNOWN</ax216:educationLevel><ax216:expansionData>USER.UUID=bd8537507b604654b4d71a1da93b777a</ax216:expansionData><ax216:extendedInfo type="blackboard.ws.user.UserExtendedInfoVO"><ax216:businessFax></ax216:businessFax><ax216:businessPhone1></ax216:businessPhone1><ax216:businessPhone2></ax216:businessPhone2><ax216:city></ax216:city><ax216:company></ax216:company><ax216:country></ax216:country><ax216:department></ax216:department><ax216:emailAddress>tsputney@gmail.com</ax216:emailAddress><ax216:expansionData>USER.OTHERNAME=</ax216:expansionData><ax216:expansionData>USER.SUFFIX=</ax216:expansionData><ax216:familyName>Putney</ax216:familyName><ax216:givenName>Susan</ax216:givenName><ax216:homeFax xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" /><ax216:homePhone1></ax216:homePhone1><ax216:homePhone2></ax216:homePhone2><ax216:jobTitle></ax216:jobTitle><ax216:middleName>M</ax216:middleName><ax216:mobilePhone></ax216:mobilePhone><ax216:state></ax216:state><ax216:street1></ax216:street1><ax216:street2></ax216:street2><ax216:webPage></ax216:webPage><ax216:zipCode></ax216:zipCode></ax216:extendedInfo><ax216:genderType>blackboard.data.user.User$Gender:UNKNOWN</ax216:genderType><ax216:id>_46416_1</ax216:id><ax216:insRoles>STAFF</ax216:insRoles><ax216:isAvailable>true</ax216:isAvailable><ax216:name>putney</ax216:name><ax216:password>310E0C5FE2A5E70AB76ED1284C7C1BBB</ax216:password><ax216:studentId>28021913</ax216:studentId><ax216:systemRoles>SYSTEM_ADMIN</ax216:systemRoles><ax216:systemRoles>SYSTEM_ADMIN</ax216:systemRoles><ax216:title></ax216:title><ax216:userBatchUid>putney</ax216:userBatchUid></ns:return></ns:getUserResponse></soapenv:Body></soapenv:Envelope>};
+my $xml =  q{<?xml version='1.0' encoding='UTF-8'?><root/>};
+my $xml2 = q{<?xml version='1.0' encoding='UTF-8'?><root>value</root>};
+my $xml3 = q{<?xml version='1.0' encoding='UTF-8'?><root><e1><attr>value</attr></e1><e1><attr>value2</attr></e1></root>};
+my $xml4 = q{<?xml version='1.0' encoding='UTF-8'?><envelope><body><return><attr1>v1</attr1><attr2><attr>value</attr></attr2></return><return><attr1>v1</attr1><attr2><attr>value</attr></attr2></return></body></envelope>};
+my $simple = Parser::P2->new();
+my $p_s = Parser::SOAP->new(Handler => $simple);
+my $filter = XML::LibXML::SAX::Parser->new( Handler => $p_s);
+my $ref = $filter->parse_string($data_source_res);
+print 'DUMPER OF RETURN ' . Dumper($ref) . "\n\n";
+$ref = $filter->parse_string($xml);
+print Dumper $ref;
+print "\n\n";
+$ref = $filter->parse_string($xml2);
+print Dumper $ref;
+print "\n\n";
+$ref = $filter->parse_string($xml3);
+print Dumper $ref;
+print "\n\n";
+$ref = $filter->parse_string($xml4);
+print Dumper $ref;
+print "\n\n";
+

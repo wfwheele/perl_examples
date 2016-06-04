@@ -1,0 +1,84 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.1",
+        "title": "SwaggerAppPOC"
+    },
+    "paths": {
+        "/students": {
+            "get": {
+                "operationId": "listOfStudents",
+                "description": "Gets `Person` objects.\nOptional query param of **size** determines\nsize of returned array\n",
+                "parameters": [
+                    {
+                        "name": "first_name_like",
+                        "in": "query",
+                        "description": "regex on first name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "ArrayOfPersons",
+                            "type": "array",
+                            "items": {
+                                "title": "Person",
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "single": {
+                                        "type": "boolean"
+                                    },
+                                    "id": {
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/students/{student_id}": {
+            "get": {
+                "operationId": "singleStudent",
+                "description": "Gets a single student object by their id\n",
+                "parameters": [
+                    {
+                        "name": "student_id",
+                        "in": "path",
+                        "description": "the id of the student",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "schema": {
+                            "title": "Person",
+                            "type": "object",
+                            "required":["name", "single", "id"],
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "single": {
+                                    "type": "boolean"
+                                },
+                                "id": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

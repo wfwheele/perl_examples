@@ -1,5 +1,8 @@
 use strict;
 use warnings;
-use File::Utils;
 
-touch 'some/dir/file.txt' or die 'error happened';
+my $file = 'file.txt';
+
+open( my $fh, '>', $file ) or die "could not open file '$file' $!";
+
+close $fh;
